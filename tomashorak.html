@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tomáš Horák – 3D tisk, konstrukce, konzultace PM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #ffffff; --bg-secondary: #f7f6f2; --text: #1a1a1a; --text-muted: #6b7280;
+      --border: rgba(0,0,0,0.09); --accent-green: #0f6e56; --accent-green-bg: #e1f5ee;
+      --accent-blue: #185fa5; --accent-blue-bg: #e6f1fb; --radius-md: 8px; --radius-lg: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1c1e; --bg-secondary: #2c2c2e; --text: #f2f2f7; --text-muted: #9a9a9f;
+        --border: rgba(255,255,255,0.1); --accent-green: #34c48a; --accent-green-bg: #0a2e22;
+        --accent-blue: #5aabf5; --accent-blue-bg: #0a1f38;
+      }
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Source Sans 3', sans-serif; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.6; }
+    .page { max-width: 820px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 0; border-bottom: 0.5px solid var(--border); }
+    .nav-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--text); text-decoration: none; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-size: 14px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+
+    .hero { padding: 3.5rem 0 3rem; border-bottom: 0.5px solid var(--border); margin-bottom: 2.5rem; display: grid; grid-template-columns: 1fr 200px; gap: 2.5rem; align-items: center; }
+    .hero-name { font-family: 'Playfair Display', serif; font-size: clamp(32px, 5vw, 48px); font-weight: 700; color: var(--text); letter-spacing: -0.5px; line-height: 1.1; }
+    .hero-tagline { font-size: 16px; font-weight: 300; color: var(--text-muted); margin-top: 0.5rem; }
+    .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.25rem; }
+    .tag { font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 999px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .tag-green { background: var(--accent-green-bg); color: var(--accent-green); }
+    .tag-blue  { background: var(--accent-blue-bg);  color: var(--accent-blue); }
+    .tag-gray  { background: var(--bg-secondary); color: var(--text-muted); border: 0.5px solid var(--border); }
+    .hero-photo { width: 200px; height: 240px; border-radius: var(--radius-lg); object-fit: cover; object-position: center top; border: 0.5px solid var(--border); display: block; filter: grayscale(10%) brightness(1.25) contrast(0.95); }
+
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.25rem; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-bottom: 3rem; }
+    .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color 0.2s; }
+    .card:hover { border-color: rgba(0,0,0,0.2); }
+    .card-main-green { border: 1.5px solid var(--accent-green); }
+    .card-img { width: 100%; height: 140px; object-fit: cover; display: block; }
+    .card-body { padding: 1.1rem 1.25rem 1.25rem; }
+    .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: var(--radius-md); margin-bottom: 0.6rem; letter-spacing: 0.3px; }
+    .badge-green { background: var(--accent-green-bg); color: var(--accent-green); }
+    .badge-blue  { background: var(--accent-blue-bg);  color: var(--accent-blue); }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+    .card-text { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+    .about { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 1.75rem 2rem; margin-bottom: 3rem; display: grid; grid-template-columns: 110px 1fr; gap: 1.75rem; align-items: start; }
+    .about-photo { width: 110px; height: 130px; border-radius: var(--radius-lg); object-fit: cover; object-position: center top; border: 0.5px solid var(--border); filter: grayscale(10%) brightness(1.25) contrast(0.95); }
+    .about-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--text); margin-bottom: 0.75rem; }
+    .about-text { font-size: 14px; color: var(--text-muted); line-height: 1.8; }
+    .interests { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1rem; }
+    .interest { font-size: 12px; color: var(--text-muted); background: var(--bg); border: 0.5px solid var(--border); border-radius: 999px; padding: 3px 10px; }
+
+    .contact { padding-top: 2rem; border-top: 0.5px solid var(--border); }
+    .contact-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--text); margin-bottom: 1rem; }
+    .contact-row { display: flex; flex-wrap: wrap; gap: 1rem 2rem; }
+    .contact-item { display: flex; flex-direction: column; gap: 2px; }
+    .contact-label { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+    .contact-value { font-size: 15px; color: var(--text); }
+    .contact-value a { color: var(--accent-blue); text-decoration: none; }
+    .contact-value a:hover { text-decoration: underline; }
+
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 0.5px solid var(--border); font-size: 12px; color: var(--text-muted); text-align: center; }
+
+    @media (max-width: 560px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-photo { width: 140px; height: 170px; }
+      .about { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <nav>
+    <a class="nav-logo" href="#">Tomáš Horák</a>
+    <ul class="nav-links">
+      <li><a href="#nabidka">Nabídka</a></li>
+      <li><a href="#o-mne">O mně</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="hero-name">Tomáš Horák</div>
+      <div class="hero-tagline">3D tisk na zakázku · Konstrukce dílů · Konzultace PM</div>
+      <div class="hero-tags">
+        <span class="tag tag-green">3D tisk</span>
+        <span class="tag tag-green">Konstrukce</span>
+        <span class="tag tag-blue">Projektové řízení</span>
+        <span class="tag tag-gray">AI &amp; automatizace</span>
+      </div>
+    </div>
+    <img class="hero-photo" src="portret.png" alt="Tomáš Horák">
+  </section>
+
+  <section id="nabidka">
+    <div class="section-label">Co nabízím</div>
+    <div class="cards">
+      <div class="card card-main-green">
+        <img class="card-img" src="brian-kamau-jS_T9wWFTyE-unsplash.jpg" alt="3D tisk">
+        <div class="card-body">
+          <div class="badge badge-green">Hlavní nabídka</div>
+          <div class="card-title">3D tisk na zakázku</div>
+          <div class="card-text">Nemáš model? Nevadí. Popíšeš co potřebuješ, já navrhnu a vytisknu. Od nápadu po hotový díl – prototypy, náhradní díly, custom výrobky.</div>
+        </div>
+      </div>
+      <div class="card card-main-green">
+        <img class="card-img" src="design-unsplash.jpg" alt="Konstrukce dílů">
+        <div class="card-body">
+          <div class="badge badge-green">Hlavní nabídka</div>
+          <div class="card-title">Konstrukce dílů</div>
+          <div class="card-text">Návrh dílců přímo pro 3D tisk s ohledem na technologii, materiál a funkci. Více než 10 let zkušeností v elektromechanické konstrukci průmyslových přístrojů.</div>
+        </div>
+      </div>
+      <div class="card">
+        <img class="card-img" src="alphabag-Rua207zYcWg-unsplash.jpg" alt="Konzultace PM">
+        <div class="card-body">
+          <div class="badge badge-blue">Doplňková nabídka</div>
+          <div class="card-title">Konzultace PM</div>
+          <div class="card-text">Pomůžu nastavit procesy, zvládnout time management nebo se zorientovat v řízení projektů. Pro jednotlivce i malé firmy – online, osobně nebo e-mailem.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="o-mne" class="about">
+    <img class="about-photo" src="portret.png" alt="Tomáš Horák">
+    <div>
+      <div class="about-title">O mně</div>
+      <div class="about-text">Vystudoval jsem elektrotechniku na VŠB-TUO (Ing. obor elektrické stroje a přístroje). Více než dekádu jsem pracoval jako elektromechanický konstruktér v průmyslu, dnes se věnuji projektovému managementu v R&amp;D. Kombinuji technickou zkušenost s konstrukcí a moderními technologiemi jako 3D tisk a AI.</div>
+      <div class="interests">
+        <span class="interest">3D tisk</span>
+        <span class="interest">Konstrukce</span>
+        <span class="interest">Projektové řízení</span>
+        <span class="interest">AI a automatizace</span>
+        <span class="interest">VR</span>
+        <span class="interest">Technika</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="kontakt" class="contact">
+    <div class="contact-title">Kontakt</div>
+    <div class="contact-row">
+      <div class="contact-item">
+        <span class="contact-label">Místo</span>
+        <span class="contact-value">Zábřeh na Moravě</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">E-mail</span>
+        <span class="contact-value"><a href="mailto:tomas.horak.85@gmail.com">tomas.horak.85@gmail.com</a></span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Telefon</span>
+        <span class="contact-value"><a href="tel:+420732905629">+420 732 905 629</a></span>
+      </div>
+    </div>
+  </section>
+
+  <footer>&copy; 2026 Tomáš Horák</footer>
+</div>
+</body>
+</html>
